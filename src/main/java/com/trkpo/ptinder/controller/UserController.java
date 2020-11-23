@@ -26,6 +26,15 @@ public class UserController {
         return "Hello, " + allUsers.get(0);
     }
 
+    @GetMapping("/{googleId}")
+    public @ResponseBody User showUser(@PathVariable String googleId) {
+        User user = userRepository.findByGoogleId(googleId);
+        if (user == null) {
+            return null;
+        }
+        return user;
+    }
+
     @PostMapping
     public User putOne(@RequestBody User user) {
         return userRepository.save(user);
