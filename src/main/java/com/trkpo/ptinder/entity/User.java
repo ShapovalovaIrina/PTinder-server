@@ -28,6 +28,8 @@ public class User {
 
     private boolean isContactInfoPublic;
 
+    private String googleId;
+
     @OneToMany(mappedBy = "petId", fetch = FetchType.EAGER)
     private List<Pet> userPets;
 
@@ -113,4 +115,11 @@ public class User {
         isContactInfoPublic = contactInfoPublic;
     }
 
+    public String getGoogleId() {
+        return googleId;
+    }
+
+    public void setGoogleId(String googleId) {
+        this.googleId = googleId;
+    }
 }
