@@ -1,0 +1,149 @@
+Index: src/main/java/com/trkpo/ptinder/controller/UserController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.trkpo.ptinder.controller;\r\n\r\nimport com.trkpo.ptinder.entity.User;\r\nimport com.trkpo.ptinder.repository.UserRepository;\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.web.bind.annotation.*;\r\n\r\nimport java.util.List;\r\n\r\n@RestController\r\n@RequestMapping(\"user\")\r\npublic class UserController {\r\n    private final UserRepository userRepository;\r\n\r\n    @Autowired\r\n    public UserController(UserRepository userRepository) {\r\n        this.userRepository = userRepository;\r\n    }\r\n\r\n    @GetMapping\r\n    public String listAll() {\r\n        List<User> allUsers = userRepository.findAll();\r\n        if (allUsers.isEmpty()) {\r\n            return \"There are no users\";\r\n        }\r\n        return \"Hello, \" + allUsers.get(0);\r\n    }\r\n\r\n    @PostMapping\r\n    public User putOne(@RequestBody User user) {\r\n        return userRepository.save(user);\r\n    }\r\n\r\n    @DeleteMapping(\"id\")\r\n    public void deleteUser(@PathVariable(\"id\") User user) {\r\n        userRepository.delete(user);\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/trkpo/ptinder/controller/UserController.java	(revision 83e1ae132b67946a78f9ac84314629a844135a54)
++++ src/main/java/com/trkpo/ptinder/controller/UserController.java	(date 1606160975480)
+@@ -1,38 +1,54 @@
+ package com.trkpo.ptinder.controller;
+ 
+ import com.trkpo.ptinder.entity.User;
+-import com.trkpo.ptinder.repository.UserRepository;
++import com.trkpo.ptinder.service.UserService;
+ import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.web.bind.annotation.*;
+ 
+ import java.util.List;
++import java.util.Optional;
++
++import static com.trkpo.ptinder.config.Constants.USERS_PATH;
+ 
+ @RestController
+-@RequestMapping("user")
++@RequestMapping(USERS_PATH)
+ public class UserController {
+-    private final UserRepository userRepository;
++    private final UserService userService;
+ 
+     @Autowired
+-    public UserController(UserRepository userRepository) {
+-        this.userRepository = userRepository;
++    public UserController(UserService userRepository) {
++        this.userService = userRepository;
+     }
+ 
+     @GetMapping
+-    public String listAll() {
+-        List<User> allUsers = userRepository.findAll();
+-        if (allUsers.isEmpty()) {
+-            return "There are no users";
+-        }
+-        return "Hello, " + allUsers.get(0);
++    public List<User> getAllUsers() {
++        return userService.getAllUsers();
++    }
++
++    @GetMapping("{id}")
++    public User getCurrentUserInfo(@PathVariable("id") User user) {
++        Optional<User> currentUser = userService.findUser(user);
++        return currentUser.orElseGet(User::new);
+     }
+ 
+     @PostMapping
+-    public User putOne(@RequestBody User user) {
+-        return userRepository.save(user);
++    public User addOrUpdateUser(@RequestBody User user) {
++        return userService.addUser(user);
+     }
+ 
+-    @DeleteMapping("id")
++    @DeleteMapping("{id}")
+     public void deleteUser(@PathVariable("id") User user) {
+-        userRepository.delete(user);
++        userService.deleteUser(user);
++    }
++
++    @GetMapping("info/{id}")
++    public boolean getUserInfoStatus(@PathVariable("id") User user) {
++        return userService.getUserInfoStatus(user);
+     }
++
++    @PostMapping("info/{id}")
++    public User setUserInfoStatus(@PathVariable("id") User user) {
++        return userService.setUserInfoStatus(user);
++    }
++
+ }
+Index: src/main/java/com/trkpo/ptinder/service/UserService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.trkpo.ptinder.service;\r\n\r\npublic class UserService {\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/trkpo/ptinder/service/UserService.java	(revision 83e1ae132b67946a78f9ac84314629a844135a54)
++++ src/main/java/com/trkpo/ptinder/service/UserService.java	(date 1606163142514)
+@@ -1,4 +1,60 @@
+ package com.trkpo.ptinder.service;
+ 
++import com.trkpo.ptinder.entity.User;
++import com.trkpo.ptinder.repository.UserRepository;
++import org.springframework.stereotype.Service;
++
++import java.util.List;
++import java.util.Optional;
++
++@Service
+ public class UserService {
++    private final UserRepository userRepository;
++
++
++    public UserService(UserRepository userRepository) {
++        this.userRepository = userRepository;
++    }
++
++    public User addUser(User user) {
++        return userRepository.save(user);
++    }
++
++    public User updateUser(User newUser, User oldUser) {
++        oldUser.setFirstName(newUser.getFirstName());
++        oldUser.setContactInfoPublic(newUser.isContactInfoPublic());
++        oldUser.setLastName(newUser.getLastName());
++        oldUser.setMiddleName(newUser.getMiddleName());
++        oldUser.setAddress(newUser.getAddress());
++        oldUser.setEmail(newUser.getEmail());
++        oldUser.setGender(newUser.getGender());
++        oldUser.setNumber(newUser.getNumber());
++        return userRepository.save(oldUser);
++    }
++
++    public void deleteUser(User user) {
++        userRepository.delete(user);
++    }
++
++    public List<User> getAllUsers() {
++        return userRepository.findAll();
++    }
++
++    public Optional<User> findUser(User user) {
++        return userRepository.findById(user.getUserId());
++    }
++
++    public boolean getUserInfoStatus(User user) {
++        Optional<User> currentUser = userRepository.findById(user.getUserId());
++        return currentUser.map(User::isContactInfoPublic).orElse(false);
++    }
++
++    public User setUserInfoStatus(User user) {
++        Optional<User> currentUser = userRepository.findById(user.getUserId());
++        if (currentUser.isPresent()) {
++            currentUser.get().setContactInfoPublic(!currentUser.get().isContactInfoPublic());
++            return userRepository.save(currentUser.get());
++        }
++        return null;
++    }
+ }
