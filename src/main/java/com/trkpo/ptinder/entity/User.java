@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -30,7 +31,7 @@ public class User {
 
     private String googleId;
 
-    @OneToMany(mappedBy = "petId", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
     private List<Pet> userPets;
 
 //    @OneToMany(mappedBy = "id", fetch = FetchType.EAGER)
@@ -121,5 +122,13 @@ public class User {
 
     public void setGoogleId(String googleId) {
         this.googleId = googleId;
+    }
+
+    public Collection<Pet> getPets() {
+        return userPets;
+    }
+
+    public void setPets(Collection<Pet> pets) {
+        this.userPets = (List<Pet>) pets;
     }
 }

@@ -1,47 +1,60 @@
 package com.trkpo.ptinder.controller;
 
 import com.trkpo.ptinder.entity.User;
-import com.trkpo.ptinder.repository.UserRepository;
+import com.trkpo.ptinder.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
+
+import static com.trkpo.ptinder.config.Constants.USERS_PATH;
 
 @RestController
-@RequestMapping("user")
+@RequestMapping(USERS_PATH)
 public class UserController {
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Autowired
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserController(UserService userRepository) {
+        this.userService = userRepository;
     }
 
     @GetMapping
-    public String listAll() {
-        List<User> allUsers = userRepository.findAll();
-        if (allUsers.isEmpty()) {
-            return "There are no users";
-        }
-        return "Hello, " + allUsers.get(0);
+    public List<User> getAllUsers() {
+        return userService.getAllUsers();
+    }
+
+    @GetMapping("{id}")
+    public User getCurrentUserInfo(@PathVariable("id") User user) {
+        Optional<User> currentUser = userService.findUser(user);
+        return currentUser.orElseGet(User::new);
     }
 
     @GetMapping("/{googleId}")
     public @ResponseBody User showUser(@PathVariable String googleId) {
-        User user = userRepository.findByGoogleId(googleId);
-        if (user == null) {
-            return null;
-        }
-        return user;
+        System.setProperty("current.user.id", googleId);
+        return userService.findByGoogleId(googleId);
     }
 
     @PostMapping
-    public User putOne(@RequestBody User user) {
-        return userRepository.save(user);
+    public User addOrUpdateUser(@RequestBody User user) {
+        return userService.addUser(user);
     }
 
-    @DeleteMapping("id")
+    @DeleteMapping("{id}")
     public void deleteUser(@PathVariable("id") User user) {
-        userRepository.delete(user);
+        userService.deleteUser(user);
     }
+
+    @GetMapping("info/{id}")
+    public boolean getUserInfoStatus(@PathVariable("id") User user) {
+        return userService.getUserInfoStatus(user);
+    }
+
+    @PostMapping("info/{id}")
+    public User setUserInfoStatus(@PathVariable("id") User user) {
+        return userService.setUserInfoStatus(user);
+    }
+
 }

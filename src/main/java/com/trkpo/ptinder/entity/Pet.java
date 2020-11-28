@@ -29,6 +29,14 @@ public class Pet {
     @OneToMany(mappedBy = "pet", fetch = FetchType.EAGER)
     private Collection<Photo> petPhotos;
 
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
+    public void setUsersLikes(List<User> usersLikes) {
+        this.usersLikes = usersLikes;
+    }
+
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private User owner;
 
