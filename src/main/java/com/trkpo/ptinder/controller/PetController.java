@@ -3,13 +3,11 @@ package com.trkpo.ptinder.controller;
 import com.trkpo.ptinder.entity.Pet;
 import com.trkpo.ptinder.entity.templates.GoggleId;
 import com.trkpo.ptinder.entity.templates.PetAndGoogleId;
-import com.trkpo.ptinder.repository.PetRepository;
 import com.trkpo.ptinder.service.PetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 import static com.trkpo.ptinder.config.Constants.PETS_PATH;
 
