@@ -20,7 +20,8 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User updateUser(User newUser, User oldUser) {
+    public User updateUser(User newUser, Long userId) {
+        User oldUser = userRepository.findById(userId).get();
         oldUser.setFirstName(newUser.getFirstName());
         oldUser.setContactInfoPublic(newUser.isContactInfoPublic());
         oldUser.setLastName(newUser.getLastName());
@@ -62,7 +63,4 @@ public class UserService {
         return userRepository.findByGoogleId(googleId);
     }
 
-    public User getCurrentUser() {
-        return userRepository.findByGoogleId(System.getProperty("current.user.id"));
-    }
 }

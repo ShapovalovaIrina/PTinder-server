@@ -6,7 +6,9 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "Users")
@@ -31,8 +33,9 @@ public class User {
 
     private String googleId;
 
-    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
-    private List<Pet> userPets;
+    @OneToMany(mappedBy = "owner",
+            orphanRemoval = true)
+    private Set<Pet> pets = new HashSet<>();
 
 //    @OneToMany(mappedBy = "id", fetch = FetchType.EAGER)
 //    private List<Notifications> notifications;
@@ -124,11 +127,4 @@ public class User {
         this.googleId = googleId;
     }
 
-    public Collection<Pet> getPets() {
-        return userPets;
-    }
-
-    public void setPets(Collection<Pet> pets) {
-        this.userPets = (List<Pet>) pets;
-    }
 }

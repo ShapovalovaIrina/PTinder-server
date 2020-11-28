@@ -26,18 +26,11 @@ public class Pet {
     private Purpose purpose;
     private String comment;
 
-    @OneToMany(mappedBy = "pet", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "pet", fetch = FetchType.EAGER, orphanRemoval = true)
     private Collection<Photo> petPhotos;
 
-    public void setOwner(User owner) {
-        this.owner = owner;
-    }
-
-    public void setUsersLikes(List<User> usersLikes) {
-        this.usersLikes = usersLikes;
-    }
-
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    @ManyToOne
+    @JoinColumn(name = "pets")
     private User owner;
 
     @ManyToMany(mappedBy = "favouritePets")
@@ -107,4 +100,15 @@ public class Pet {
         this.petPhotos = petPhotos;
     }
 
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
+    public void setUsersLikes(List<User> usersLikes) {
+        this.usersLikes = usersLikes;
+    }
 }

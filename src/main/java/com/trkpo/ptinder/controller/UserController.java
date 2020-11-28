@@ -38,8 +38,13 @@ public class UserController {
     }
 
     @PostMapping
-    public User addOrUpdateUser(@RequestBody User user) {
+    public User addUser(@RequestBody User user) {
         return userService.addUser(user);
+    }
+
+    @PutMapping("{id}")
+    public User updateUsr(@PathVariable Long id, @RequestBody User user) {
+        return userService.updateUser(user, id);
     }
 
     @DeleteMapping("{id}")
