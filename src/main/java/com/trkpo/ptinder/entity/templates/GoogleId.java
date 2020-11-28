@@ -1,6 +1,6 @@
 package com.trkpo.ptinder.entity.templates;
 
-public class GoggleId {
+public class GoogleId {
     String googleId;
 
     public String getGoogleId() {
