@@ -31,7 +31,7 @@ public class UserController {
         return currentUser.orElseGet(User::new);
     }
 
-    @GetMapping("/{googleId}")
+    @GetMapping("google/{googleId}")
     public @ResponseBody User showUser(@PathVariable String googleId) {
         System.setProperty("current.user.id", googleId);
         return userService.findByGoogleId(googleId);
