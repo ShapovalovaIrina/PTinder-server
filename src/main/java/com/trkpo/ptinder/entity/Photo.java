@@ -9,8 +9,8 @@ public class Photo {
     @GeneratedValue
     private Long id;
 
-    // TODO how to save photos to pg ???
-    private String photo;
+    @Lob
+    private byte[] photo;
 
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private Pet pet;

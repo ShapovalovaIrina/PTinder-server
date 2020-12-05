@@ -26,6 +26,11 @@ public class PetService {
         return petRepository.findAll();
     }
 
+    public List<Pet> findPetsForUser(GoogleId googleId) {
+        User user = userRepository.findByGoogleId(googleId.getGoogleId());
+        return petRepository.findByOwner(user);
+    }
+
     public Pet savePetForUser(PetAndGoogleId petAndGoogleId) {
         User user = getCurrentUser(petAndGoogleId.getGoogleId());
         Pet pet = petAndGoogleId.getPet();
@@ -38,7 +43,7 @@ public class PetService {
         User user = getCurrentUser(googleId.getGoogleId());
         userRepository.save(user);
         petRepository.deleteById(pet.getPetId());
-        System.out.println("Successfully deleted pet with id " + googleId.getGoogleId() + "for user " + user);
+        System.out.println("Successfully deleted pet with id " + pet.getPetId() + "for user " + user);
     }
 
     public User getCurrentUser(String id) {
