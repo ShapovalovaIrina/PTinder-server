@@ -25,16 +25,9 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    @GetMapping("{id}")
-    public User getCurrentUserInfo(@PathVariable("id") User user) {
-        Optional<User> currentUser = userService.findUser(user);
-        return currentUser.orElseGet(User::new);
-    }
-
-    @GetMapping("google/{googleId}")
-    public @ResponseBody User showUser(@PathVariable String googleId) {
-        System.setProperty("current.user.id", googleId);
-        return userService.findByGoogleId(googleId);
+    @GetMapping("{googleId}")
+    public User getCurrentUserInfo(@PathVariable("googleId") User user) {
+        return userService.findUser(user);
     }
 
     @PostMapping
@@ -42,24 +35,24 @@ public class UserController {
         return userService.addUser(user);
     }
 
-    @PutMapping("{id}")
-    public User updateUsr(@PathVariable Long id, @RequestBody User user) {
-        return userService.updateUser(user, id);
+    @PutMapping("{googleId}")
+    public User updateUsr(@PathVariable String googleId, @RequestBody User user) {
+        return userService.updateUser(user, googleId);
     }
 
-    @DeleteMapping("{id}")
-    public void deleteUser(@PathVariable("id") User user) {
-        userService.deleteUser(user);
+    @DeleteMapping("{googleId}")
+    public void deleteUser(@PathVariable("googleId") String googleId) {
+        userService.deleteUser(googleId);
     }
 
-    @GetMapping("info/{id}")
-    public boolean getUserInfoStatus(@PathVariable("id") User user) {
-        return userService.getUserInfoStatus(user);
+    @GetMapping("info/{googleId}")
+    public boolean getUserInfoStatus(@PathVariable("googleId") String googleId) {
+        return userService.getUserInfoStatus(googleId);
     }
 
-    @PostMapping("info/{id}")
-    public User setUserInfoStatus(@PathVariable("id") User user) {
-        return userService.setUserInfoStatus(user);
+    @PostMapping("info/{googleId}")
+    public User setUserInfoStatus(@PathVariable("googleId") String googleId) {
+        return userService.setUserInfoStatus(googleId);
     }
 
 }

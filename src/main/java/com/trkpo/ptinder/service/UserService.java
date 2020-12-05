@@ -5,7 +5,6 @@ import com.trkpo.ptinder.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -20,8 +19,8 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User updateUser(User newUser, Long userId) {
-        User oldUser = userRepository.findById(userId).get();
+    public User updateUser(User newUser, String userId) {
+        User oldUser = userRepository.findByGoogleId(userId);
         oldUser.setFirstName(newUser.getFirstName());
         oldUser.setContactInfoPublic(newUser.isContactInfoPublic());
         oldUser.setLastName(newUser.getLastName());
@@ -33,34 +32,28 @@ public class UserService {
         return userRepository.save(oldUser);
     }
 
-    public void deleteUser(User user) {
-        userRepository.delete(user);
+    public void deleteUser(String userId) {
+        User forDeletion = userRepository.findByGoogleId(userId);
+        userRepository.delete(forDeletion);
     }
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
-    public Optional<User> findUser(User user) {
-        return userRepository.findById(user.getUserId());
+    public User findUser(User user) {
+        return userRepository.findByGoogleId(user.getGoogleId());
     }
 
-    public boolean getUserInfoStatus(User user) {
-        Optional<User> currentUser = userRepository.findById(user.getUserId());
-        return currentUser.map(User::isContactInfoPublic).orElse(false);
+    public boolean getUserInfoStatus(String userId) {
+        User currentUser = userRepository.findByGoogleId(userId);
+        return currentUser.isContactInfoPublic();
     }
 
-    public User setUserInfoStatus(User user) {
-        Optional<User> currentUser = userRepository.findById(user.getUserId());
-        if (currentUser.isPresent()) {
-            currentUser.get().setContactInfoPublic(!currentUser.get().isContactInfoPublic());
-            return userRepository.save(currentUser.get());
-        }
-        return null;
+    public User setUserInfoStatus(String userId) {
+        User currentUser = userRepository.findByGoogleId(userId);
+        currentUser.setContactInfoPublic(!currentUser.isContactInfoPublic());
+        return userRepository.save(currentUser);
     }
-
-    public User findByGoogleId(String googleId) {
-        return userRepository.findByGoogleId(googleId);
-    }
-
+    
 }
