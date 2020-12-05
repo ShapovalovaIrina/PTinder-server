@@ -16,8 +16,7 @@ import java.util.Set;
 @EqualsAndHashCode(of = {"userId"})
 public class User {
     @Id
-    @GeneratedValue
-    private Long userId;
+    private String googleId;
 
     private String firstName;
     private String middleName;
@@ -30,8 +29,6 @@ public class User {
     private String email;
 
     private boolean isContactInfoPublic;
-
-    private String googleId;
 
     @OneToMany(mappedBy = "owner",
             orphanRemoval = true)
@@ -46,14 +43,6 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "pet_id"))
     List<Pet> favouritePets;
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
 
     public String getFirstName() {
         return firstName;
