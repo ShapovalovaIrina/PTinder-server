@@ -1,6 +1,16 @@
 package com.trkpo.ptinder.entity;
 
-import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import org.apache.tomcat.util.codec.binary.Base64;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "Photos")
@@ -9,9 +19,35 @@ public class Photo {
     @GeneratedValue
     private Long id;
 
-    @Lob
+    @Column(name = "photo")
     private byte[] photo;
 
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    @JsonBackReference
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "pet_id")
     private Pet pet;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getPhoto() {
+        return Base64.encodeBase64String(photo);
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = Base64.decodeBase64(photo);
+    }
+
+    public Pet getPet() {
+        return pet;
+    }
+
+    public void setPet(Pet pet) {
+        this.pet = pet;
+    }
 }

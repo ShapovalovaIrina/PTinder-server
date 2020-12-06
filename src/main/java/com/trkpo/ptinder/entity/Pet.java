@@ -6,7 +6,15 @@ import com.trkpo.ptinder.entity.enums.Purpose;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.Collection;
 import java.util.List;
 
@@ -26,7 +34,7 @@ public class Pet {
     private Purpose purpose;
     private String comment;
 
-    @OneToMany(mappedBy = "pet", fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "pet", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<Photo> petPhotos;
 
     @ManyToOne
