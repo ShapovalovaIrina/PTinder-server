@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.trkpo.ptinder.config.Constants.PETS_PATH;
 
@@ -21,9 +22,15 @@ public class PetController {
         this.petService = petService;
     }
 
-    @GetMapping
-    public List<Pet> listAll() {
-        return petService.findAllPets();
+    @GetMapping("{id}")
+    public Pet getPet(@PathVariable("id") Long id) {
+        Optional<Pet> currentPet = petService.findPet(id);
+        return currentPet.orElseGet(Pet::new);
+    }
+
+    @GetMapping("owner/{googleid}")
+    public List<Pet> listPetsForUser(@PathVariable("googleid") String googleId) {
+        return petService.findPetsForUser(googleId);
     }
 
     @PostMapping
@@ -40,5 +47,4 @@ public class PetController {
     public Pet updateInfo(@PathVariable("petid") Long id, @RequestBody PetAndGoogleId petAndGoogleId) {
         return petService.updatePetInfo(petAndGoogleId, id);
     }
-
 }

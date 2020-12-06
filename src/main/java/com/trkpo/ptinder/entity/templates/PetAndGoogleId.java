@@ -1,9 +1,13 @@
 package com.trkpo.ptinder.entity.templates;
 
 import com.trkpo.ptinder.entity.Pet;
+import com.trkpo.ptinder.entity.Photo;
+
+import java.util.List;
 
 public class PetAndGoogleId {
     Pet pet;
+    List<Photo> photos;
     String googleId;
 
     public Pet getPet() {
@@ -20,5 +24,13 @@ public class PetAndGoogleId {
 
     public void setGoogleId(String googleId) {
         this.googleId = googleId;
+    }
+
+    public List<Photo> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(List<Photo> photos) {
+        this.photos = photos;
     }
 }
