@@ -1,11 +1,11 @@
 package com.trkpo.ptinder.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.trkpo.ptinder.entity.enums.Gender;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -13,13 +13,13 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "Users")
-@ToString(of = {"userId", "firstName", "lastName"})
-@EqualsAndHashCode(of = {"userId"})
+@ToString(of = {"firstName", "lastName"})
+@EqualsAndHashCode(of = {"googleId"})
+@JsonIgnoreProperties("favouritePets")
 public class User {
     @Id
     private String googleId;
@@ -48,7 +48,7 @@ public class User {
             name = "favourite_pets",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "pet_id"))
-    List<Pet> favouritePets;
+    private Set<Pet> favouritePets = new HashSet<>();
 
     public String getFirstName() {
         return firstName;
@@ -120,6 +120,14 @@ public class User {
 
     public void setGoogleId(String googleId) {
         this.googleId = googleId;
+    }
+
+    public Set<Pet> getFavouritePets() {
+        return favouritePets;
+    }
+
+    public void setFavouritePets(Set<Pet> favouritePets) {
+        this.favouritePets = favouritePets;
     }
 
 }
