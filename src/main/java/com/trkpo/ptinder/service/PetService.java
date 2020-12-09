@@ -50,7 +50,6 @@ public class PetService {
         for (Photo photo : photos) {
             photo.setPet(pet);
         }
-//        List<Photo> photos = petAndGoogleId.getPhotos().stream().map(x -> x.setId(pet)).collect(Collectors.toList());
         photoRepository.saveAll(photos);
         pet.setPetPhotos(photos);
         return petRepository.save(pet);

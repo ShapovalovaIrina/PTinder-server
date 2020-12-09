@@ -1,5 +1,6 @@
 package com.trkpo.ptinder.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.trkpo.ptinder.entity.enums.Breed;
 import com.trkpo.ptinder.entity.enums.Gender;
 import com.trkpo.ptinder.entity.enums.Purpose;
@@ -16,12 +17,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "Pets")
 @ToString(of = {"petId", "name"})
 @EqualsAndHashCode(of = {"petId"})
+@JsonIgnoreProperties("usersLikes")
 public class Pet {
     @Id
     @GeneratedValue
@@ -42,7 +45,7 @@ public class Pet {
     private User owner;
 
     @ManyToMany(mappedBy = "favouritePets")
-    List<User> usersLikes;
+    Set<User> usersLikes = new HashSet<>();
 
     public Long getPetId() {
         return petId;
@@ -116,7 +119,11 @@ public class Pet {
         this.owner = owner;
     }
 
-    public void setUsersLikes(List<User> usersLikes) {
+    public void setUsersLikes(Set<User> usersLikes) {
         this.usersLikes = usersLikes;
+    }
+
+    public Set<User> getUsersLikes() {
+        return usersLikes;
     }
 }
