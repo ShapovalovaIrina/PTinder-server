@@ -2,11 +2,13 @@ package com.trkpo.ptinder.service;
 
 import com.trkpo.ptinder.entity.User;
 import com.trkpo.ptinder.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Slf4j
 public class UserService {
     private final UserRepository userRepository;
 
@@ -16,6 +18,7 @@ public class UserService {
     }
 
     public User addUser(User user) {
+        log.info("User {} has been added", user);
         return userRepository.save(user);
     }
 
@@ -29,12 +32,14 @@ public class UserService {
         oldUser.setEmail(newUser.getEmail());
         oldUser.setGender(newUser.getGender());
         oldUser.setNumber(newUser.getNumber());
+        log.info("User with id {} has been updated", oldUser.getGoogleId());
         return userRepository.save(oldUser);
     }
 
     public void deleteUser(String userId) {
         User forDeletion = userRepository.findByGoogleId(userId);
         userRepository.delete(forDeletion);
+        log.info("User with id {} was successfully deleted", userId);
     }
 
     public List<User> getAllUsers() {

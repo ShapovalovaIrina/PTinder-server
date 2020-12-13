@@ -53,6 +53,7 @@ public class PetService {
 //        List<Photo> photos = petAndGoogleId.getPhotos().stream().map(x -> x.setId(pet)).collect(Collectors.toList());
         photoRepository.saveAll(photos);
         pet.setPetPhotos(photos);
+        log.info("Pet {} was added for user {}", pet.getName(), user.getGoogleId());
         return petRepository.save(pet);
     }
 
@@ -60,7 +61,7 @@ public class PetService {
         User user = getCurrentUser(googleId.getGoogleId());
         userRepository.save(user);
         petRepository.deleteById(pet.getPetId());
-        System.out.println("Successfully deleted pet with id " + pet.getPetId() + "for user " + user);
+        log.info("Successfully deleted pet with id " + pet.getPetId() + "for user " + user);
     }
 
     public User getCurrentUser(String id) {
