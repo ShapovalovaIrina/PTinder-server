@@ -5,14 +5,14 @@ import com.trkpo.ptinder.entity.Photo;
 import com.trkpo.ptinder.entity.User;
 import com.trkpo.ptinder.entity.templates.GoogleId;
 import com.trkpo.ptinder.entity.templates.PetAndGoogleId;
+import com.trkpo.ptinder.entity.templates.SearchInfo;
 import com.trkpo.ptinder.repository.PetRepository;
 import com.trkpo.ptinder.repository.PhotoRepository;
 import com.trkpo.ptinder.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -70,17 +70,67 @@ public class PetService {
         Pet pet = petAndGoogleId.getPet();
         Pet oldPet = petRepository.findById(id).get();
         oldPet.setAge(pet.getAge());
-        oldPet.setBreed(pet.getBreed());
+        oldPet.setAnimalType(pet.getAnimalType());
         oldPet.setComment(pet.getComment());
         oldPet.setName(pet.getName());
         oldPet.setGender(pet.getGender());
         oldPet.setPurpose(pet.getPurpose());
+        return getPet(petAndGoogleId, oldPet);
+    }
+
+    private Pet getPet(PetAndGoogleId petAndGoogleId, Pet oldPet) {
         List<Photo> photos = petAndGoogleId.getPhotos();
-        for (Photo photo : photos) {
-            photo.setPet(oldPet);
+        if (photos != null) {
+            for (Photo photo : photos) {
+                photo.setPet(oldPet);
+            }
+            photoRepository.saveAll(photos);
         }
-        photoRepository.saveAll(photos);
         oldPet.setPetPhotos(photos);
         return petRepository.save(oldPet);
+    }
+
+    public List<Pet> findPetsWithFilters(SearchInfo info) {
+        List<Pet> byType = info.getAnimalType() != null ? petRepository.findByAnimalType(info.getAnimalType()) : Collections.emptyList();
+        List<Pet> byBreed = info.getBreed() != null ? petRepository.findByBreed(info.getBreed()) : Collections.emptyList();
+        List<Pet> byGender = info.getGender() != null ? petRepository.findByGender(info.getGender()) : Collections.emptyList();
+        List<Pet> byAge = info.getAge() != null ? petRepository.findByAge(info.getAge()) : Collections.emptyList();
+        List<Pet> byPurpose = info.getPurpose() != null ? petRepository.findByPurpose(info.getPurpose()) : Collections.emptyList();
+        List<Pet> byAddress = info.getAddress() != null ? findByAddress(info.getAddress()) : Collections.emptyList();
+        Set<Pet> filteredPets = new HashSet<>();
+        filteredPets.addAll(byAddress);
+        filteredPets.addAll(byAge);
+        filteredPets.addAll(byType);
+        filteredPets.addAll(byBreed);
+        filteredPets.addAll(byGender);
+        filteredPets.addAll(byPurpose);
+        if (!byType.isEmpty()) {
+            filteredPets.retainAll(byType);
+        }
+        if (!byBreed.isEmpty()) {
+            filteredPets.retainAll(byBreed);
+        }
+        if (!byGender.isEmpty()) {
+            filteredPets.retainAll(byGender);
+        }
+        if (!byAddress.isEmpty()) {
+            filteredPets.retainAll(byAddress);
+        }
+        if (!byAge.isEmpty()) {
+            filteredPets.retainAll(byAge);
+        }
+        if (!byPurpose.isEmpty()) {
+            filteredPets.retainAll(byPurpose);
+        }
+        return new ArrayList<>(filteredPets);
+    }
+
+    private List<Pet> findByAddress(String address) {
+        List<User> usersAtAddress = userRepository.findByAddress(address);
+        List<Pet> petsAtAddress = new ArrayList<>();
+        for (User usr : usersAtAddress) {
+            petsAtAddress.addAll(petRepository.findByOwner(usr));
+        }
+        return petsAtAddress;
     }
 }

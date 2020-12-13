@@ -1,21 +1,13 @@
 package com.trkpo.ptinder.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.trkpo.ptinder.entity.enums.Breed;
+import com.trkpo.ptinder.entity.enums.AnimalType;
 import com.trkpo.ptinder.entity.enums.Gender;
 import com.trkpo.ptinder.entity.enums.Purpose;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -33,15 +25,16 @@ public class Pet {
     private String name;
     private Integer age;
     private Gender gender;
-    private Breed breed;
+    private AnimalType animalType;
+    private String breed;
     private Purpose purpose;
     private String comment;
 
     @OneToMany(mappedBy = "pet", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<Photo> petPhotos;
 
-    @ManyToOne
-    @JoinColumn(name = "pets")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "owner_id")
     private User owner;
 
     @ManyToMany(mappedBy = "favouritePets")
@@ -79,12 +72,12 @@ public class Pet {
         this.gender = gender;
     }
 
-    public Breed getBreed() {
-        return breed;
+    public AnimalType getAnimalType() {
+        return animalType;
     }
 
-    public void setBreed(Breed breed) {
-        this.breed = breed;
+    public void setAnimalType(AnimalType animalType) {
+        this.animalType = animalType;
     }
 
     public Purpose getPurpose() {

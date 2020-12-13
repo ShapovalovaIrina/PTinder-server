@@ -5,13 +5,7 @@ import com.trkpo.ptinder.entity.enums.Gender;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -37,7 +31,7 @@ public class User {
     private boolean isContactInfoPublic;
 
     @OneToMany(mappedBy = "owner",
-            orphanRemoval = true)
+            cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Pet> pets = new HashSet<>();
 
 //    @OneToMany(mappedBy = "id", fetch = FetchType.EAGER)
