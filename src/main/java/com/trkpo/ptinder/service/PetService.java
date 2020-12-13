@@ -46,11 +46,17 @@ public class PetService {
         pet.setOwner(user);
         userRepository.save(user);
         pet = petRepository.save(pet);
+        return getPet(petAndGoogleId, pet);
+    }
+
+    private Pet getPet(PetAndGoogleId petAndGoogleId, Pet pet) {
         List<Photo> photos = petAndGoogleId.getPhotos();
-        for (Photo photo : photos) {
-            photo.setPet(pet);
+        if (photos != null) {
+            for (Photo photo : photos) {
+                photo.setPet(pet);
+            }
+            photoRepository.saveAll(photos);
         }
-        photoRepository.saveAll(photos);
         pet.setPetPhotos(photos);
         return petRepository.save(pet);
     }
@@ -76,18 +82,6 @@ public class PetService {
         oldPet.setGender(pet.getGender());
         oldPet.setPurpose(pet.getPurpose());
         return getPet(petAndGoogleId, oldPet);
-    }
-
-    private Pet getPet(PetAndGoogleId petAndGoogleId, Pet oldPet) {
-        List<Photo> photos = petAndGoogleId.getPhotos();
-        if (photos != null) {
-            for (Photo photo : photos) {
-                photo.setPet(oldPet);
-            }
-            photoRepository.saveAll(photos);
-        }
-        oldPet.setPetPhotos(photos);
-        return petRepository.save(oldPet);
     }
 
     public List<Pet> findPetsWithFilters(SearchInfo info) {
