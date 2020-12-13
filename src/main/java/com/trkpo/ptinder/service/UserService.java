@@ -41,8 +41,8 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User findUser(User user) {
-        return userRepository.findByGoogleId(user.getGoogleId());
+    public User findUser(String googleId) {
+        return userRepository.findByGoogleId(googleId);
     }
 
     public boolean getUserInfoStatus(String userId) {
@@ -55,5 +55,8 @@ public class UserService {
         currentUser.setContactInfoPublic(!currentUser.isContactInfoPublic());
         return userRepository.save(currentUser);
     }
-    
+
+    public boolean isCurrentUserExist(String googleId) {
+        return userRepository.existsByGoogleId(googleId);
+    }
 }

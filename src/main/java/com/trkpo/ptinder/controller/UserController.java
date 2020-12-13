@@ -26,8 +26,13 @@ public class UserController {
     }
 
     @GetMapping("{googleId}")
-    public User getCurrentUserInfo(@PathVariable("googleId") User user) {
-        return userService.findUser(user);
+    public User getCurrentUserInfo(@PathVariable("googleId") String googleId) {
+        return userService.findUser(googleId);
+    }
+
+    @GetMapping("exists/{googleId}")
+    public boolean isCurrentUserExist(@PathVariable("googleId") String googleId) {
+        return userService.isCurrentUserExist(googleId);
     }
 
     @PostMapping
