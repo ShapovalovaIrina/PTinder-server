@@ -1,8 +1,8 @@
 package com.trkpo.ptinder.repository;
 
+import com.trkpo.ptinder.entity.AnimalType;
 import com.trkpo.ptinder.entity.Pet;
 import com.trkpo.ptinder.entity.User;
-import com.trkpo.ptinder.entity.enums.AnimalType;
 import com.trkpo.ptinder.entity.enums.Gender;
 import com.trkpo.ptinder.entity.enums.Purpose;
 import org.springframework.data.jpa.repository.JpaRepository;

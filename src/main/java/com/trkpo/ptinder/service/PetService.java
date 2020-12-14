@@ -1,11 +1,13 @@
 package com.trkpo.ptinder.service;
 
+import com.trkpo.ptinder.entity.AnimalType;
 import com.trkpo.ptinder.entity.Pet;
 import com.trkpo.ptinder.entity.Photo;
 import com.trkpo.ptinder.entity.User;
 import com.trkpo.ptinder.entity.templates.GoogleId;
 import com.trkpo.ptinder.entity.templates.PetAndGoogleId;
 import com.trkpo.ptinder.entity.templates.SearchInfo;
+import com.trkpo.ptinder.repository.AnimalTypeRepository;
 import com.trkpo.ptinder.repository.PetRepository;
 import com.trkpo.ptinder.repository.PhotoRepository;
 import com.trkpo.ptinder.repository.UserRepository;
@@ -20,11 +22,13 @@ public class PetService {
     private final PetRepository petRepository;
     private final UserRepository userRepository;
     private final PhotoRepository photoRepository;
+    private final AnimalTypeRepository animalTypeRepository;
 
-    public PetService(PetRepository petRepository, UserRepository userRepository, PhotoRepository photoRepository) {
+    public PetService(PetRepository petRepository, UserRepository userRepository, PhotoRepository photoRepository, AnimalTypeRepository animalTypeRepository) {
         this.petRepository = petRepository;
         this.userRepository = userRepository;
         this.photoRepository = photoRepository;
+        this.animalTypeRepository = animalTypeRepository;
     }
 
     public List<Pet> findAllPets() {
@@ -41,6 +45,7 @@ public class PetService {
     }
 
     public Pet savePetForUser(PetAndGoogleId petAndGoogleId) {
+        log.info("Going to save pet for user {}", petAndGoogleId.getGoogleId());
         User user = getCurrentUser(petAndGoogleId.getGoogleId());
         Pet pet = petAndGoogleId.getPet();
         pet.setOwner(user);
@@ -126,5 +131,13 @@ public class PetService {
             petsAtAddress.addAll(petRepository.findByOwner(usr));
         }
         return petsAtAddress;
+    }
+
+    public List<AnimalType> getAllAnimalTypes() {
+        return animalTypeRepository.findAll();
+    }
+
+    public AnimalType addNewAnimalType(AnimalType type) {
+        return animalTypeRepository.save(type);
     }
 }

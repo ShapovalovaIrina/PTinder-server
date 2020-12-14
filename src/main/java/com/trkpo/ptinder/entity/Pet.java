@@ -1,7 +1,6 @@
 package com.trkpo.ptinder.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.trkpo.ptinder.entity.enums.AnimalType;
 import com.trkpo.ptinder.entity.enums.Gender;
 import com.trkpo.ptinder.entity.enums.Purpose;
 import lombok.EqualsAndHashCode;
@@ -25,6 +24,8 @@ public class Pet {
     private String name;
     private Integer age;
     private Gender gender;
+
+    @OneToOne
     private AnimalType animalType;
     private String breed;
     private Purpose purpose;
