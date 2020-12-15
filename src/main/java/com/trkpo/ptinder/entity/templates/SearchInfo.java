@@ -1,6 +1,6 @@
 package com.trkpo.ptinder.entity.templates;
 
-import com.trkpo.ptinder.entity.enums.AnimalType;
+import com.trkpo.ptinder.entity.AnimalType;
 import com.trkpo.ptinder.entity.enums.Gender;
 import com.trkpo.ptinder.entity.enums.Purpose;
 

@@ -1,5 +1,6 @@
 package com.trkpo.ptinder.controller;
 
+import com.trkpo.ptinder.entity.AnimalType;
 import com.trkpo.ptinder.entity.Pet;
 import com.trkpo.ptinder.entity.templates.GoogleId;
 import com.trkpo.ptinder.entity.templates.PetAndGoogleId;
@@ -46,5 +47,15 @@ public class PetController {
     @PutMapping("{petid}")
     public Pet updateInfo(@PathVariable("petid") Long id, @RequestBody PetAndGoogleId petAndGoogleId) {
         return petService.updatePetInfo(petAndGoogleId, id);
+    }
+
+    @GetMapping("/types")
+    public List<AnimalType> getAvailableAnimalTypes() {
+        return petService.getAllAnimalTypes();
+    }
+
+    @PostMapping("/types")
+    public AnimalType addNewType(@RequestBody AnimalType newType) {
+        return petService.addNewAnimalType(newType);
     }
 }
