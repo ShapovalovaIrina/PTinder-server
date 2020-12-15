@@ -50,6 +50,9 @@ public class PetService {
         Pet pet = petAndGoogleId.getPet();
         pet.setOwner(user);
         userRepository.save(user);
+        AnimalType type = animalTypeRepository.findByType(petAndGoogleId.getType());
+        pet.setAnimalType(type);
+        animalTypeRepository.save(type);
         pet = petRepository.save(pet);
         return getPet(petAndGoogleId, pet);
     }
@@ -81,7 +84,6 @@ public class PetService {
         Pet pet = petAndGoogleId.getPet();
         Pet oldPet = petRepository.findById(id).get();
         oldPet.setAge(pet.getAge());
-        oldPet.setAnimalType(pet.getAnimalType());
         oldPet.setComment(pet.getComment());
         oldPet.setName(pet.getName());
         oldPet.setGender(pet.getGender());
@@ -138,6 +140,7 @@ public class PetService {
     }
 
     public AnimalType addNewAnimalType(AnimalType type) {
-        return animalTypeRepository.save(type);
+        AnimalType oldType = animalTypeRepository.findByType(type.getType());
+        return oldType != null ? oldType : animalTypeRepository.save(type);
     }
 }

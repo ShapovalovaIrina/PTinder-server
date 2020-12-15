@@ -7,6 +7,7 @@ import java.util.List;
 
 public class PetAndGoogleId {
     Pet pet;
+    String type;
     List<Photo> photos;
     String googleId;
 
@@ -32,5 +33,13 @@ public class PetAndGoogleId {
 
     public void setPhotos(List<Photo> photos) {
         this.photos = photos;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

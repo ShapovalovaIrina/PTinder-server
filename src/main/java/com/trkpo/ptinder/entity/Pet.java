@@ -25,8 +25,9 @@ public class Pet {
     private Integer age;
     private Gender gender;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private AnimalType animalType;
+
     private String breed;
     private Purpose purpose;
     private String comment;
