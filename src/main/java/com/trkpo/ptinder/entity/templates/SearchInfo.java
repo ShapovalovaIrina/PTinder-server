@@ -9,7 +9,8 @@ public class SearchInfo {
     private AnimalType animalType;
     private String breed;
     private Gender gender;
-    private Integer age;
+    private Integer minAge;
+    private Integer maxAge;
     private Purpose purpose;
     private String address;
 
@@ -37,12 +38,20 @@ public class SearchInfo {
         this.gender = gender;
     }
 
-    public Integer getAge() {
-        return age;
+    public Integer getMinAge() {
+        return minAge;
     }
 
-    public void setAge(Integer age) {
-        this.age = age;
+    public void setMinAge(Integer minAge) {
+        this.minAge = minAge;
+    }
+
+    public Integer getMaxAge() {
+        return maxAge;
+    }
+
+    public void setMaxAge(Integer maxAge) {
+        this.maxAge = maxAge;
     }
 
     public Purpose getPurpose() {
