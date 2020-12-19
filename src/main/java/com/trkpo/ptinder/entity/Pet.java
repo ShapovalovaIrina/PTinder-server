@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -33,7 +34,7 @@ public class Pet {
     private String comment;
 
     @OneToMany(mappedBy = "pet", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Collection<Photo> petPhotos;
+    private Collection<Photo> petPhotos = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "owner_id")
@@ -103,7 +104,10 @@ public class Pet {
     }
 
     public void setPetPhotos(Collection<Photo> petPhotos) {
-        this.petPhotos = petPhotos;
+        this.petPhotos.clear();
+        if (petPhotos != null) {
+            this.petPhotos.addAll(petPhotos);
+        }
     }
 
     public User getOwner() {
@@ -120,5 +124,13 @@ public class Pet {
 
     public Set<User> getUsersLikes() {
         return usersLikes;
+    }
+
+    public String getBreed() {
+        return breed;
+    }
+
+    public void setBreed(String breed) {
+        this.breed = breed;
     }
 }

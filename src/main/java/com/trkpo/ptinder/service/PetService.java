@@ -92,6 +92,7 @@ public class PetService {
         oldPet.setName(pet.getName());
         oldPet.setGender(pet.getGender());
         oldPet.setPurpose(pet.getPurpose());
+        oldPet.setBreed(pet.getBreed());
         return getPet(petAndGoogleId, oldPet);
     }
 
