@@ -6,4 +6,5 @@ public class Constants {
     public static final String PETS_PATH = PATH + "/pets";
     public static final String FAVOURITE_PATH = PATH + "/favourites";
     public static final String SEARCH_PATH = PATH + "/search";
+    public static final String NEWS_PATH = PATH + "/news";
 }
