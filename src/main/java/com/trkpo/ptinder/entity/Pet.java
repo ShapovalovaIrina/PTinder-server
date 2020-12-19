@@ -83,6 +83,14 @@ public class Pet {
         this.animalType = animalType;
     }
 
+    public String getBreed() {
+        return breed;
+    }
+
+    public void setBreed(String breed) {
+        this.breed = breed;
+    }
+
     public Purpose getPurpose() {
         return purpose;
     }
@@ -124,13 +132,5 @@ public class Pet {
 
     public Set<User> getUsersLikes() {
         return usersLikes;
-    }
-
-    public String getBreed() {
-        return breed;
-    }
-
-    public void setBreed(String breed) {
-        this.breed = breed;
     }
 }
