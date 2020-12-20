@@ -2,7 +2,6 @@ package com.trkpo.ptinder.controller;
 
 import com.trkpo.ptinder.entity.AnimalType;
 import com.trkpo.ptinder.entity.Pet;
-import com.trkpo.ptinder.entity.templates.GoogleId;
 import com.trkpo.ptinder.entity.templates.PetAndGoogleId;
 import com.trkpo.ptinder.service.PetService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +39,8 @@ public class PetController {
     }
 
     @DeleteMapping("{petid}")
-    public void deletePet(@PathVariable("petid") Pet pet, @RequestBody GoogleId googleId) {
-        petService.deleteById(pet, googleId);
+    public void deletePet(@PathVariable("petid") Pet pet) {
+        petService.deleteById(pet);
     }
 
     @PutMapping("{petid}")

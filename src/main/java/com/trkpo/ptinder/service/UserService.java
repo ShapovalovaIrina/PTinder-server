@@ -2,11 +2,13 @@ package com.trkpo.ptinder.service;
 
 import com.trkpo.ptinder.entity.User;
 import com.trkpo.ptinder.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Slf4j
 public class UserService {
     private final UserRepository userRepository;
 
@@ -33,6 +35,7 @@ public class UserService {
     }
 
     public void deleteUser(String userId) {
+        log.info("Going to delete user " + userId);
         User forDeletion = userRepository.findByGoogleId(userId);
         userRepository.delete(forDeletion);
     }
