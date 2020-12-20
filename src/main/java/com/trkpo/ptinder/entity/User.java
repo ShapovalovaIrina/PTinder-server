@@ -28,6 +28,8 @@ public class User {
     private String address;
     private String email;
 
+    private String photoUrl;
+
     private boolean isContactInfoPublic;
 
     @OneToMany(mappedBy = "owner",
@@ -124,4 +126,11 @@ public class User {
         this.favouritePets = favouritePets;
     }
 
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
 }
