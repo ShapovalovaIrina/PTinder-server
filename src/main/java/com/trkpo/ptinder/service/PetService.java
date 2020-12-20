@@ -8,7 +8,6 @@ import com.trkpo.ptinder.entity.enums.Gender;
 import com.trkpo.ptinder.entity.enums.Purpose;
 import com.trkpo.ptinder.entity.templates.GoogleId;
 import com.trkpo.ptinder.entity.templates.PetAndGoogleId;
-import com.trkpo.ptinder.entity.templates.SearchInfo;
 import com.trkpo.ptinder.repository.AnimalTypeRepository;
 import com.trkpo.ptinder.repository.PetRepository;
 import com.trkpo.ptinder.repository.PhotoRepository;
@@ -73,11 +72,9 @@ public class PetService {
         return petRepository.save(pet);
     }
 
-    public void deleteById(Pet pet, GoogleId googleId) {
-        User user = getCurrentUser(googleId.getGoogleId());
-        userRepository.save(user);
+    public void deleteById(Pet pet) {
         petRepository.deleteById(pet.getPetId());
-        System.out.println("Successfully deleted pet with id " + pet.getPetId() + "for user " + user);
+        System.out.println("Successfully deleted pet with id " + pet.getPetId());
     }
 
     public User getCurrentUser(String id) {
@@ -191,6 +188,8 @@ public class PetService {
         for (User u : allUsers) {
             addr.add(u.getAddress());
         }
-        return new ArrayList<>(addr);
+        List<String> result = new ArrayList<>(addr);
+        Collections.sort(result);
+        return result;
     }
 }
