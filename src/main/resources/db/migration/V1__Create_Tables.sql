@@ -50,6 +50,7 @@ create table users
     last_name              varchar(255),
     middle_name            varchar(255),
     number                 varchar(255),
+    photo_url              varchar(255),
     primary key (google_id)
 );
 alter table if exists favourite_pets
