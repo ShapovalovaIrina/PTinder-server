@@ -5,15 +5,25 @@ import com.trkpo.ptinder.entity.enums.Gender;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "Users")
 @ToString(of = {"firstName", "lastName"})
 @EqualsAndHashCode(of = {"googleId"})
-@JsonIgnoreProperties("favouritePets")
+@JsonIgnoreProperties({"favouritePets", "notifications"})
 public class User {
     @Id
     private String googleId;
@@ -36,8 +46,8 @@ public class User {
             cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Pet> pets = new HashSet<>();
 
-//    @OneToMany(mappedBy = "id", fetch = FetchType.EAGER)
-//    private List<Notifications> notifications;
+    @OneToMany(mappedBy = "addressee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Notifications> notifications = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(
@@ -132,5 +142,13 @@ public class User {
 
     public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
+    }
+
+    public List<Notifications> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(List<Notifications> notifications) {
+        this.notifications = notifications;
     }
 }
