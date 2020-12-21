@@ -1,5 +1,6 @@
 package com.trkpo.ptinder.entity;
 
+import com.trkpo.ptinder.entity.enums.NotificationType;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -14,11 +15,13 @@ public class Notifications {
     @GeneratedValue
     private Long id;
 
+    private NotificationType type;
     private String text;
     private boolean isRead;
 
-//    @ManyToOne(optional = false, cascade = CascadeType.ALL)
-//    private User addressee;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private User addressee;
 
     public Long getId() {
         return id;
@@ -42,5 +45,21 @@ public class Notifications {
 
     public void setRead(boolean read) {
         isRead = read;
+    }
+
+    public NotificationType getType() {
+        return type;
+    }
+
+    public void setType(NotificationType type) {
+        this.type = type;
+    }
+
+    public User getAddressee() {
+        return addressee;
+    }
+
+    public void setAddressee(User addressee) {
+        this.addressee = addressee;
     }
 }

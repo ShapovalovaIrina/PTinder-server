@@ -15,8 +15,10 @@ create table favourite_pets
 create table notifications
 (
     id      int8    not null,
+    type    int4,
     is_read boolean not null,
     text    varchar(2048),
+    user_id varchar(255),
     primary key (id)
 );
 create table pets
