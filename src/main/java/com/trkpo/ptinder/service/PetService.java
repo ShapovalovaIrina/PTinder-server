@@ -6,7 +6,6 @@ import com.trkpo.ptinder.entity.Photo;
 import com.trkpo.ptinder.entity.User;
 import com.trkpo.ptinder.entity.enums.Gender;
 import com.trkpo.ptinder.entity.enums.Purpose;
-import com.trkpo.ptinder.entity.templates.GoogleId;
 import com.trkpo.ptinder.entity.templates.PetAndGoogleId;
 import com.trkpo.ptinder.repository.AnimalTypeRepository;
 import com.trkpo.ptinder.repository.PetRepository;
@@ -94,12 +93,15 @@ public class PetService {
     }
 
     public List<Pet> findPetsWithFilters(String addres, String gender, String purpose, String type, String minAge, String maxAge) {
+        if (addres.equals("-") && gender.isEmpty() && purpose.equals("NOTHING") && type.equals("-") && minAge.isEmpty() && maxAge.isEmpty()) {
+            return petRepository.findAll();
+        }
         AnimalType tmpType = animalTypeRepository.findByType(type);
-        List<Pet> byType = Collections.EMPTY_LIST;
+        List<Pet> byType = petRepository.findAll();
         if (tmpType != null) {
             byType = petRepository.findByAnimalType(tmpType);
         }
-        List<Pet> byGender = petRepository.findByGender(gender.equalsIgnoreCase("male") ? Gender.MALE : Gender.FEMALE);
+        List<Pet> byGender = collectByGender(gender);
         List<Pet> byAge = collectAnimalsForAllAges(minAge, maxAge);
         List<Pet> byPurpose = collectByPurpose(purpose);
         List<Pet> byAddress = findByAddress(addres);
@@ -127,6 +129,14 @@ public class PetService {
         return new ArrayList<>(filteredPets);
     }
 
+    private List<Pet> collectByGender(String gender) {
+         if (gender.isEmpty()) {
+             return petRepository.findAll();
+         } else {
+             return petRepository.findByGender(gender.equalsIgnoreCase("male") ? Gender.MALE : Gender.FEMALE);
+         }
+    }
+
     private List<Pet> collectByPurpose(String purpose) {
         if (purpose.equalsIgnoreCase(Purpose.NOTHING.name())) {
             return petRepository.findAll();
@@ -148,6 +158,9 @@ public class PetService {
     }
 
     private List<Pet> collectAnimalsForAllAges(String minAge, String maxAge) {
+        if (minAge.isEmpty() && maxAge.isEmpty()) {
+            return petRepository.findAll();
+        }
         if (minAge == null || minAge.isEmpty()) {
             minAge = "0";
         }
@@ -163,7 +176,7 @@ public class PetService {
 
     private List<Pet> findByAddress(String address) {
         if (address.equals("-")) {
-            return Collections.emptyList();
+            return petRepository.findAll();
         }
         List<User> usersAtAddress = userRepository.findByAddress(address);
         List<Pet> petsAtAddress = new ArrayList<>();
