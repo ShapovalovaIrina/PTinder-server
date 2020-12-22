@@ -1,11 +1,13 @@
 package com.trkpo.ptinder.service;
 
 import com.trkpo.ptinder.entity.User;
+import com.trkpo.ptinder.entity.templates.GoogleId;
 import com.trkpo.ptinder.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 @Slf4j
@@ -61,5 +63,33 @@ public class UserService {
 
     public boolean isCurrentUserExist(String googleId) {
         return userRepository.existsByGoogleId(googleId);
+    }
+
+    public void subscribe(String userId, GoogleId aimUser) {
+        User currentUser = userRepository.findByGoogleId(userId);
+        User userForSubscription = userRepository.findByGoogleId(aimUser.getGoogleId());
+        Set<User> supscriptions = currentUser.getSubscriptions();
+        supscriptions.add(userForSubscription);
+        currentUser.setSubscriptions(supscriptions);
+        userRepository.save(currentUser);
+        userRepository.save(userForSubscription);
+        log.info("User {} successfully subscribed on user {}", userId, aimUser);
+    }
+
+
+    public void unsubscribe(String userId, String aimUser) {
+        User currentUser = userRepository.findByGoogleId(userId);
+        User userForSubscription = userRepository.findByGoogleId(aimUser);
+        currentUser.getSubscriptions().remove(userForSubscription);
+        userRepository.save(currentUser);
+        userForSubscription.getSubscribers().remove(currentUser);
+        userRepository.save(userForSubscription);
+        log.info("User {} successfully unsubscribed from user {}", userId, aimUser);
+    }
+
+    public boolean checkSubscription(String userId, String aimUser) {
+        User currentUser = userRepository.findByGoogleId(userId);
+        User userForSubscription = userRepository.findByGoogleId(aimUser);
+        return currentUser.getSubscriptions().contains(userForSubscription);
     }
 }

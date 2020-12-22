@@ -55,6 +55,14 @@ create table users
     photo_url              varchar(255),
     primary key (google_id)
 );
+
+create table tbl_friends
+(
+    friend_id varchar(255) not null,
+    user_id   varchar(255) not null,
+    primary key (user_id, friend_id)
+);
+
 alter table if exists favourite_pets
     add constraint favourite_pet_pet_fk foreign key (pet_id) references pets;
 alter table if exists favourite_pets
@@ -65,3 +73,7 @@ alter table if exists pets
     add constraint pets_user_fk foreign key (owner_id) references users;
 alter table if exists photos
     add constraint photos_pet_fk foreign key (pet_id) references pets;
+alter table if exists tbl_friends
+    add constraint user_id_fk foreign key (user_id) references users;
+alter table if exists tbl_friends
+    add constraint friend_id_fk foreign key (friend_id) references users;

@@ -23,7 +23,7 @@ import java.util.Set;
 @Table(name = "Users")
 @ToString(of = {"firstName", "lastName"})
 @EqualsAndHashCode(of = {"googleId"})
-@JsonIgnoreProperties({"favouritePets", "notifications"})
+@JsonIgnoreProperties({"favouritePets", "notifications", "subscribers"})
 public class User {
     @Id
     private String googleId;
@@ -55,6 +55,18 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "pet_id"))
     private Set<Pet> favouritePets = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(name = "tbl_friends",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "friend_id"))
+    private Set<User> subscribers;
+
+    @ManyToMany
+    @JoinTable(name = "tbl_friends",
+            joinColumns = @JoinColumn(name = "friend_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> subscriptions;
 
     public String getFirstName() {
         return firstName;
@@ -150,5 +162,21 @@ public class User {
 
     public void setNotifications(List<Notifications> notifications) {
         this.notifications = notifications;
+    }
+
+    public Set<User> getSubscribers() {
+        return subscribers;
+    }
+
+    public Set<User> getSubscriptions() {
+        return subscriptions;
+    }
+
+    public void setSubscribers(Set<User> subscribers) {
+        this.subscribers = subscribers;
+    }
+
+    public void setSubscriptions(Set<User> subscriptions) {
+        this.subscriptions = subscriptions;
     }
 }
