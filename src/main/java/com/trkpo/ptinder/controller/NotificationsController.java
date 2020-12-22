@@ -1,12 +1,10 @@
 package com.trkpo.ptinder.controller;
 
 import com.trkpo.ptinder.entity.Notifications;
+import com.trkpo.ptinder.entity.templates.NotificationTemplate;
 import com.trkpo.ptinder.service.NotificationsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,8 +20,13 @@ public class NotificationsController {
         this.notificationsService = notificationsService;
     }
 
-    @GetMapping("/{googleid}")
-    public List<Notifications> getPet(@PathVariable("googleid") String googleId) {
+    @GetMapping("/{googleId}")
+    public List<Notifications> getNotificationsForUser(@PathVariable("googleId") String googleId) {
         return notificationsService.getNotificationsForUser(googleId);
+    }
+
+    @PostMapping("/{googleId}")
+    public void markAsRead(@PathVariable("googleId") String googleId, @RequestBody NotificationTemplate notifs) {
+        notificationsService.markAsRead(googleId, notifs);
     }
 }
