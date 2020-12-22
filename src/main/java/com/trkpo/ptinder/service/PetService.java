@@ -80,27 +80,28 @@ public class PetService {
     public Pet updatePetInfo(PetAndGoogleId petAndGoogleId, Long id) {
         Pet pet = petAndGoogleId.getPet();
         Pet oldPet = petRepository.findById(id).get();
+        User user = userRepository.findByGoogleId(petAndGoogleId.getGoogleId());
+        String favText = "Информация о Вашем избранном питомце " + oldPet.getName() + " была обновлена!";
+        sendNotificationAboutFav(favText, user, NotificationType.EDIT_FAVOURITE, oldPet);
         oldPet.setAge(pet.getAge());
         oldPet.setComment(pet.getComment());
         oldPet.setName(pet.getName());
         oldPet.setGender(pet.getGender());
         oldPet.setPurpose(pet.getPurpose());
         oldPet.setBreed(pet.getBreed());
-        User user = userRepository.findByGoogleId(petAndGoogleId.getGoogleId());
         String notificationText = "Пользователь " + user.getFirstName() + " обновил информацию о питомце " + oldPet.getName();
         sendNotification(notificationText, user, NotificationType.EDIT_PET);
-        if (user.getFavouritePets().contains(oldPet)) {
-            String favText = "Информация о Вашем избранном питомце " + oldPet.getName() + " была обновлена!";
-            sendNotificationAboutFav(favText, user, NotificationType.EDIT_FAVOURITE, oldPet);
-        }
         return getPet(petAndGoogleId, oldPet);
     }
 
     private void sendNotificationAboutFav(String favText, User user, NotificationType type, Pet pet) {
-        Set<Pet> petSet = user.getFavouritePets();
-        if (petSet.contains(pet)) {
-            Notifications newNotif = new Notifications(favText, type, user);
-            notificationsRepository.save(newNotif);
+        Set<User> subscribers = user.getSubscribers();
+        for (User u : subscribers) {
+            Set<Pet> petSet = u.getFavouritePets();
+            if (petSet.contains(pet)) {
+                Notifications newNotif = new Notifications(favText, type, user);
+                notificationsRepository.save(newNotif);
+            }
         }
     }
 
