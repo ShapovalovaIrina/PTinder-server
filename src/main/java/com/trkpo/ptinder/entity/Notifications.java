@@ -23,6 +23,17 @@ public class Notifications {
     @JoinColumn(name = "user_id")
     private User addressee;
 
+    public Notifications(String text, NotificationType type, User u) {
+        this.text = text;
+        this.type = type;
+        this.addressee = u;
+        this.isRead = false;
+    }
+
+    public Notifications() {
+
+    }
+
     public Long getId() {
         return id;
     }

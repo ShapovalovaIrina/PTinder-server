@@ -1,16 +1,11 @@
 package com.trkpo.ptinder.service;
 
-import com.trkpo.ptinder.entity.AnimalType;
-import com.trkpo.ptinder.entity.Pet;
-import com.trkpo.ptinder.entity.Photo;
-import com.trkpo.ptinder.entity.User;
+import com.trkpo.ptinder.entity.*;
 import com.trkpo.ptinder.entity.enums.Gender;
+import com.trkpo.ptinder.entity.enums.NotificationType;
 import com.trkpo.ptinder.entity.enums.Purpose;
 import com.trkpo.ptinder.entity.templates.PetAndGoogleId;
-import com.trkpo.ptinder.repository.AnimalTypeRepository;
-import com.trkpo.ptinder.repository.PetRepository;
-import com.trkpo.ptinder.repository.PhotoRepository;
-import com.trkpo.ptinder.repository.UserRepository;
+import com.trkpo.ptinder.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -23,12 +18,14 @@ public class PetService {
     private final UserRepository userRepository;
     private final PhotoRepository photoRepository;
     private final AnimalTypeRepository animalTypeRepository;
+    private final NotificationsRepository notificationsRepository;
 
-    public PetService(PetRepository petRepository, UserRepository userRepository, PhotoRepository photoRepository, AnimalTypeRepository animalTypeRepository) {
+    public PetService(PetRepository petRepository, UserRepository userRepository, PhotoRepository photoRepository, AnimalTypeRepository animalTypeRepository, NotificationsRepository notificationsRepository) {
         this.petRepository = petRepository;
         this.userRepository = userRepository;
         this.photoRepository = photoRepository;
         this.animalTypeRepository = animalTypeRepository;
+        this.notificationsRepository = notificationsRepository;
     }
 
     public List<Pet> findAllPets() {
@@ -41,8 +38,6 @@ public class PetService {
 
     public List<Pet> findPetsForUser(String googleId) {
         User user = userRepository.findByGoogleId(googleId);
-        List<Pet> p = petRepository.findByOwner(user);
-        System.out.println();
         return petRepository.findByOwner(user);
     }
 
@@ -51,6 +46,8 @@ public class PetService {
         User user = getCurrentUser(petAndGoogleId.getGoogleId());
         Pet pet = petAndGoogleId.getPet();
         pet.setOwner(user);
+        String notificationText = "Пользователь " + user.getFirstName() + " добавил нового питомца!";
+        sendNotification(notificationText, user, NotificationType.NEW_PET);
         userRepository.save(user);
         AnimalType type = animalTypeRepository.findByType(petAndGoogleId.getType());
         pet.setAnimalType(type);
@@ -89,7 +86,22 @@ public class PetService {
         oldPet.setGender(pet.getGender());
         oldPet.setPurpose(pet.getPurpose());
         oldPet.setBreed(pet.getBreed());
+        User user = userRepository.findByGoogleId(petAndGoogleId.getGoogleId());
+        String notificationText = "Пользователь " + user.getFirstName() + " обновил информацию о питомце " + oldPet.getName();
+        sendNotification(notificationText, user, NotificationType.EDIT_PET);
+        if (user.getFavouritePets().contains(oldPet)) {
+            String favText = "Информация о Вашем избранном питомце " + oldPet.getName() + " была обновлена!";
+            sendNotificationAboutFav(favText, user, NotificationType.EDIT_FAVOURITE, oldPet);
+        }
         return getPet(petAndGoogleId, oldPet);
+    }
+
+    private void sendNotificationAboutFav(String favText, User user, NotificationType type, Pet pet) {
+        Set<Pet> petSet = user.getFavouritePets();
+        if (petSet.contains(pet)) {
+            Notifications newNotif = new Notifications(favText, type, user);
+            notificationsRepository.save(newNotif);
+        }
     }
 
     public List<Pet> findPetsWithFilters(String addres, String gender, String purpose, String type, String minAge, String maxAge) {
@@ -130,11 +142,11 @@ public class PetService {
     }
 
     private List<Pet> collectByGender(String gender) {
-         if (gender.isEmpty()) {
-             return petRepository.findAll();
-         } else {
-             return petRepository.findByGender(gender.equalsIgnoreCase("male") ? Gender.MALE : Gender.FEMALE);
-         }
+        if (gender.isEmpty()) {
+            return petRepository.findAll();
+        } else {
+            return petRepository.findByGender(gender.equalsIgnoreCase("male") ? Gender.MALE : Gender.FEMALE);
+        }
     }
 
     private List<Pet> collectByPurpose(String purpose) {
@@ -204,5 +216,13 @@ public class PetService {
         List<String> result = new ArrayList<>(addr);
         Collections.sort(result);
         return result;
+    }
+
+    public void sendNotification(String text, User user, NotificationType type) {
+        Set<User> subscribers = user.getSubscribers();
+        for (User u : subscribers) {
+            Notifications newNotif = new Notifications(text, type, u);
+            notificationsRepository.save(newNotif);
+        }
     }
 }
