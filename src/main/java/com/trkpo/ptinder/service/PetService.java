@@ -95,13 +95,9 @@ public class PetService {
     }
 
     private void sendNotificationAboutFav(String favText, User user, NotificationType type, Pet pet) {
-        Set<User> subscribers = user.getSubscribers();
-        for (User u : subscribers) {
-            Set<Pet> petSet = u.getFavouritePets();
-            if (petSet.contains(pet)) {
-                Notifications newNotif = new Notifications(favText, type, user);
-                notificationsRepository.save(newNotif);
-            }
+        for (User u : pet.getUsersLikes()) {
+            Notifications newNotif = new Notifications(favText, type, u);
+            notificationsRepository.save(newNotif);
         }
     }
 
