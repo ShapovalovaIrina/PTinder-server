@@ -19,6 +19,7 @@ create table notifications
     is_read boolean not null,
     text    varchar(2048),
     user_id varchar(255),
+    addressee_from_id varchar(255),
     primary key (id)
 );
 create table pets

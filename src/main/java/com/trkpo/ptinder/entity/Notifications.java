@@ -23,10 +23,13 @@ public class Notifications {
     @JoinColumn(name = "user_id")
     private User addressee;
 
+    private String addresseeFromId;
+
     public Notifications(String text, NotificationType type, User u) {
         this.text = text;
         this.type = type;
         this.addressee = u;
+        this.addresseeFromId = "";
         this.isRead = false;
     }
 
@@ -72,5 +75,13 @@ public class Notifications {
 
     public void setAddressee(User addressee) {
         this.addressee = addressee;
+    }
+
+    public String getAddresseeFromId() {
+        return addresseeFromId;
+    }
+
+    public void setAddresseeFromId(String addresseeFromId) {
+        this.addresseeFromId = addresseeFromId;
     }
 }

@@ -9,4 +9,5 @@ public class Constants {
     public static final String NEWS_PATH = PATH + "/news";
     public static final String NOTIFICATIONS_PATH = PATH + "/notifications";
     public static final String SUBSCRIPTION_PATH = PATH + "/subscribe";
+    public static final String CONTACT_PATH = PATH + "/contacts";
 }
