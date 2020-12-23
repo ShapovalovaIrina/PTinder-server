@@ -126,14 +126,14 @@ public class PetService {
         if (!byGender.isEmpty()) {
             filteredPets.retainAll(byGender);
         }
-        if (!byAddress.isEmpty()) {
-            filteredPets.retainAll(byAddress);
-        }
         if (!byAge.isEmpty()) {
             filteredPets.retainAll(byAge);
         }
         if (!byPurpose.isEmpty()) {
             filteredPets.retainAll(byPurpose);
+        }
+        if (!byAddress.isEmpty()) {
+            filteredPets.retainAll(byAddress);
         }
         return new ArrayList<>(filteredPets);
     }
