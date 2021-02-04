@@ -3,6 +3,10 @@ package com.trkpo.ptinder.entity.templates;
 public class GoogleId {
     String googleId;
 
+    public GoogleId(String googleId) {
+        this.googleId = googleId;
+    }
+
     public String getGoogleId() {
         return googleId;
     }
