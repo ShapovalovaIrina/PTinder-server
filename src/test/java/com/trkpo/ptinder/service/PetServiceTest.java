@@ -19,7 +19,7 @@ import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-public class PetServiceTest {
+public class PetServiceTest extends AbstractServiceTest {
     PetRepository petRepository;
     UserRepository userRepository;
     PhotoRepository photoRepository;
@@ -27,14 +27,12 @@ public class PetServiceTest {
     NotificationsRepository notificationsRepository;
 
     PetService petService;
-    Pet testPet;
-    User testUser;
-    AnimalType type;
 
     public final Long TEST_PET_ID = 111L;
 
     @Before
     public void before() {
+        initPetAndUser();
         petRepository = Mockito.mock(PetRepository.class);
         userRepository = Mockito.mock(UserRepository.class);
         photoRepository = Mockito.mock(PhotoRepository.class);
@@ -42,16 +40,7 @@ public class PetServiceTest {
         notificationsRepository = Mockito.mock(NotificationsRepository.class);
 
         petService = new PetService(petRepository, userRepository, photoRepository, animalTypeRepository, notificationsRepository);
-        testPet = new Pet();
-        testPet.setPetId(TEST_PET_ID);
-        testPet.setName("Doggo");
-        type = new AnimalType();
-        type.setType("Dog");
-        testPet.setAnimalType(type);
 
-        testUser = new User();
-        testUser.setGoogleId("101");
-        testUser.setFirstName("firstName");
         testUser.setSubscriptions(new HashSet<>());
         Set<User> userSet = new HashSet<>();
         userSet.add(new User());
@@ -173,16 +162,7 @@ public class PetServiceTest {
 
     @Test
     public void testFullSearchFilter() {
-        List<Pet> listOfPets = new ArrayList<>();
-        Pet fPet = new Pet();
-        fPet.setName("name");
-        fPet.setPetId(123L);
-        fPet.setAge(3);
-        fPet.setBreed("Katty");
-        fPet.setGender(Gender.FEMALE);
-        fPet.setPurpose(Purpose.BREEDING);
-        fPet.setAnimalType(type);
-        listOfPets.add(fPet);
+        Pet fPet = createTestPet(123, "name", 3, "Katty", Purpose.BREEDING, type, Gender.FEMALE);
         when(petRepository.findAll()).thenReturn(Arrays.asList(new Pet(), fPet, testPet));
         when(petRepository.findByAnimalType(type)).thenReturn(Collections.singletonList(fPet));
         when(userRepository.findByAddress("Peter")).thenReturn(Collections.singletonList(testUser));
@@ -193,20 +173,32 @@ public class PetServiceTest {
 
     @Test
     public void testFindPetsWithoutAddress() {
-        List<Pet> listOfPets = new ArrayList<>();
-        Pet fPet = new Pet();
-        fPet.setName("name");
-        fPet.setPetId(123L);
-        fPet.setAge(3);
-        fPet.setBreed("Katty");
-        fPet.setGender(Gender.FEMALE);
-        fPet.setPurpose(Purpose.BREEDING);
-        fPet.setAnimalType(type);
-        listOfPets.add(fPet);
+        Pet fPet = createTestPet(123, "name", 3, "Katty", Purpose.BREEDING, type, Gender.FEMALE);
         when(petRepository.findAll()).thenReturn(Arrays.asList(new Pet(), fPet, testPet));
         when(petRepository.findByAnimalType(type)).thenReturn(Collections.singletonList(fPet));
         assertEquals(1, petService.findPetsWithFilters("-", "FEMALE", "BREEDING", "Dog", "1", "5").size());
         assertTrue(petService.findPetsWithFilters("-", "FEMALE", "BREEDING", "Dog", "1", "5").contains(fPet));
+    }
+
+    @Test
+    public void testFindPetsWithoutGender() {
+        Pet fPet = createTestPet(123, "name", 3, "Katty", Purpose.BREEDING, type, Gender.FEMALE);
+        when(petRepository.findAll()).thenReturn(Arrays.asList(new Pet(), fPet, testPet));
+        when(petRepository.findByAnimalType(type)).thenReturn(Collections.singletonList(fPet));
+        assertEquals(1, petService.findPetsWithFilters("-", "", "BREEDING", "Dog", "1", "5").size());
+        assertTrue(petService.findPetsWithFilters("-", "", "BREEDING", "Dog", "1", "5").contains(fPet));
+    }
+
+    private Pet createTestPet(int id, String name, int age, String breed, Purpose purpose, AnimalType type, Gender gender) {
+        Pet fPet = new Pet();
+        fPet.setName(name);
+        fPet.setPetId((long) id);
+        fPet.setAge(age);
+        fPet.setBreed(breed);
+        fPet.setGender(gender);
+        fPet.setPurpose(purpose);
+        fPet.setAnimalType(type);
+        return fPet;
     }
 
 }
