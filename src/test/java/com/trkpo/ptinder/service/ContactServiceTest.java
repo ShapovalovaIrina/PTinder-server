@@ -11,12 +11,11 @@ import org.mockito.Mockito;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-public class ContactServiceTest {
+public class ContactServiceTest extends AbstractServiceTest {
     UserRepository userRepository;
     NotificationsRepository notificationsRepository;
     ContactService contactService;
 
-    User testUser;
     User anotherUser;
     Notifications not;
 
@@ -25,12 +24,10 @@ public class ContactServiceTest {
 
     @Before
     public void before() {
+        initPetAndUser();
         userRepository = Mockito.mock(UserRepository.class);
         notificationsRepository = Mockito.mock(NotificationsRepository.class);
         contactService = new ContactService(userRepository, notificationsRepository);
-
-        testUser = new User();
-        testUser.setFirstName("fName");
 
         anotherUser = new User();
         anotherUser.setFirstName("aName");

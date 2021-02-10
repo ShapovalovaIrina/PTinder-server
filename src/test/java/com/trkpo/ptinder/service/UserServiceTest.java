@@ -15,22 +15,16 @@ import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-public class UserServiceTest {
+public class UserServiceTest extends AbstractServiceTest {
     UserRepository userRepository;
     UserService userService;
-    User testUser;
-
-    static final String TEST_FIRST_NAME = "testFirstName";
-    static final String TEST_GOOGLE_ID = "111";
 
     @Before
     public void init() {
+        initPetAndUser();
         userRepository = Mockito.mock(UserRepository.class);
         userService = new UserService(userRepository);
 
-        testUser = new User();
-        testUser.setGoogleId(TEST_GOOGLE_ID);
-        testUser.setFirstName(TEST_FIRST_NAME);
         testUser.setContactInfoPublic(false);
         testUser.setSubscriptions(new HashSet<>());
 
@@ -38,7 +32,6 @@ public class UserServiceTest {
         when(userRepository.save(testUser)).thenReturn(testUser);
         when(userRepository.findAll()).thenReturn(Arrays.asList(testUser, new User(), new User()));
         when(userRepository.existsByGoogleId(TEST_GOOGLE_ID)).thenReturn(true);
-
     }
 
     @Test
