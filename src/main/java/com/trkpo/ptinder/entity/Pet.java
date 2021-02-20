@@ -75,10 +75,6 @@ public class Pet {
         this.gender = gender;
     }
 
-    public AnimalType getAnimalType() {
-        return animalType;
-    }
-
     public void setAnimalType(AnimalType animalType) {
         this.animalType = animalType;
     }

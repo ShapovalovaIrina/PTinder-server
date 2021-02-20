@@ -148,14 +148,6 @@ public class User {
         this.favouritePets = favouritePets;
     }
 
-    public String getPhotoUrl() {
-        return photoUrl;
-    }
-
-    public void setPhotoUrl(String photoUrl) {
-        this.photoUrl = photoUrl;
-    }
-
     public List<Notifications> getNotifications() {
         return notifications;
     }

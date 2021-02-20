@@ -9,7 +9,6 @@ import javax.persistence.*;
 @Entity
 @Table(name = "Notifications")
 @ToString(of = {"id"})
-@EqualsAndHashCode(of = {"id"})
 public class Notifications {
     @Id
     @GeneratedValue
@@ -45,10 +44,6 @@ public class Notifications {
         this.id = id;
     }
 
-    public String getText() {
-        return text;
-    }
-
     public void setText(String text) {
         this.text = text;
     }
@@ -69,16 +64,8 @@ public class Notifications {
         this.type = type;
     }
 
-    public User getAddressee() {
-        return addressee;
-    }
-
     public void setAddressee(User addressee) {
         this.addressee = addressee;
-    }
-
-    public String getAddresseeFromId() {
-        return addresseeFromId;
     }
 
     public void setAddresseeFromId(String addresseeFromId) {

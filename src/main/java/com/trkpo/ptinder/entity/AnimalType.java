@@ -10,7 +10,6 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "AnimalType")
-@ToString()
 @EqualsAndHashCode(of = {"id"})
 public class AnimalType {
     @Id

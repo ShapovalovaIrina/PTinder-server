@@ -35,10 +35,6 @@ public class Photo {
         this.id = id;
     }
 
-    public String getPhoto() {
-        return Base64.encodeBase64String(photo);
-    }
-
     public void setPhoto(String photo) {
         this.photo = Base64.decodeBase64(photo);
     }
