@@ -1,5 +1,9 @@
 package com.trkpo.ptinder.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.trkpo.ptinder.entity.AnimalType;
 import com.trkpo.ptinder.entity.Pet;
 import com.trkpo.ptinder.entity.User;
@@ -23,5 +27,13 @@ public class AbstractControllerTest {
         testUser = new User();
         testUser.setGoogleId(TEST_GOOGLE_ID);
         testUser.setFirstName("firstName");
+        testUser.setAddress("Peter");
+    }
+
+    String getObjectAsJson(Object obj) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
+        return ow.writeValueAsString(obj);
     }
 }

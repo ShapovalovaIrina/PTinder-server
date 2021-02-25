@@ -156,10 +156,4 @@ public class UserControllerTest extends AbstractControllerTest {
                 .andReturn();
     }
 
-    private String getObjectAsJson(Object obj) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        return ow.writeValueAsString(obj);
-    }
 }
