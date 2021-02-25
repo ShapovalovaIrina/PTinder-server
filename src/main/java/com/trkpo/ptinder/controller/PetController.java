@@ -40,6 +40,7 @@ public class PetController {
 
     @DeleteMapping("{petid}")
     public void deletePet(@PathVariable("petid") Pet pet) {
+        // TODO there is np test for this case
         petService.deleteById(pet);
     }
 
