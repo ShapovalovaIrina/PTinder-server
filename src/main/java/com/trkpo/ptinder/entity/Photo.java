@@ -31,6 +31,14 @@ public class Photo {
         return id;
     }
 
+    public byte[] getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(byte[] photo) {
+        this.photo = photo;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }

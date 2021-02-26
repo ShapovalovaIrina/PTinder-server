@@ -63,6 +63,10 @@ public class Pet {
         return age;
     }
 
+    public AnimalType getAnimalType() {
+        return animalType;
+    }
+
     public void setAge(Integer age) {
         this.age = age;
     }

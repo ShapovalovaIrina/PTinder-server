@@ -24,6 +24,18 @@ public class Notifications {
 
     private String addresseeFromId;
 
+    public String getText() {
+        return text;
+    }
+
+    public User getAddressee() {
+        return addressee;
+    }
+
+    public String getAddresseeFromId() {
+        return addresseeFromId;
+    }
+
     public Notifications(String text, NotificationType type, User u) {
         this.text = text;
         this.type = type;
