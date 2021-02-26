@@ -23,7 +23,7 @@ import java.util.Set;
 @Table(name = "Users")
 @ToString(of = {"firstName", "lastName"})
 @EqualsAndHashCode(of = {"googleId"})
-@JsonIgnoreProperties({"favouritePets", "notifications", "subscribers", "subscriptions"})
+@JsonIgnoreProperties({"pets", "favouritePets", "notifications", "subscribers", "subscriptions"})
 public class User {
     @Id
     private String googleId;
