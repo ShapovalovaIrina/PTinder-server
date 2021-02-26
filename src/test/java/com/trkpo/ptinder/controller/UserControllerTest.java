@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -22,6 +23,7 @@ import static com.trkpo.ptinder.config.Constants.USERS_PATH;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -125,11 +127,13 @@ public class UserControllerTest extends AbstractControllerTest {
 
     @Test
     public void testCanDeleteUser() throws Exception {
+        UserService userService = Mockito.mock(UserService.class);
+        UserController userController = new UserController(userService);
+        MockMvc mockMvc = standaloneSetup(userController).build();
         mockMvc.perform(delete("/" + USERS_PATH + "/{googleId}", TEST_GOOGLE_ID))
                 .andExpect(status().isOk())
                 .andReturn();
-        // TODO why not working ???
-//        verify(userService).deleteUser(TEST_GOOGLE_ID);
+        verify(userService).deleteUser(TEST_GOOGLE_ID);
     }
 
     @Test

@@ -36,6 +36,7 @@ public class FavouriteController {
     }
 
     @GetMapping("{petid}")
+    // TODO create test, cuz I don't know how to test entity from string. Sorry...
     public Set<User> getUsersForPet(@PathVariable("petid") Pet pet) {
         return favouriteService.findUsersForPet(pet);
     }

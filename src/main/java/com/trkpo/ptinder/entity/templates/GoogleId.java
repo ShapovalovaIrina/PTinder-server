@@ -7,6 +7,9 @@ public class GoogleId {
         this.googleId = googleId;
     }
 
+    public GoogleId() {
+    }
+
     public String getGoogleId() {
         return googleId;
     }

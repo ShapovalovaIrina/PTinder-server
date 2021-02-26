@@ -136,6 +136,22 @@ public class User {
         return googleId;
     }
 
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
+
+    public Set<Pet> getPets() {
+        return pets;
+    }
+
+    public void setPets(Set<Pet> pets) {
+        this.pets = pets;
+    }
+
     public void setGoogleId(String googleId) {
         this.googleId = googleId;
     }
