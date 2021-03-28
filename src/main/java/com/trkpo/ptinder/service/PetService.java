@@ -222,4 +222,8 @@ public class PetService {
             notificationsRepository.save(newNotif);
         }
     }
+
+    public void deleteAllPets() {
+        petRepository.deleteAll();
+    }
 }

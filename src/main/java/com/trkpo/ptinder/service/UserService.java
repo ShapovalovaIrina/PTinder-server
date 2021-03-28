@@ -92,4 +92,8 @@ public class UserService {
         User userForSubscription = userRepository.findByGoogleId(aimUser);
         return currentUser.getSubscriptions().contains(userForSubscription);
     }
+
+    public void deleteAllUsers() {
+        userRepository.deleteAll();
+    }
 }
