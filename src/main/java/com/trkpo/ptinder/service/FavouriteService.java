@@ -7,6 +7,7 @@ import com.trkpo.ptinder.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -41,11 +42,13 @@ public class FavouriteService {
     public Set<Pet> addToFavouriteForUser(Long petId, String googleId) {
         User user = userRepository.findByGoogleId(googleId);
         Set<Pet> favourites = user.getFavouritePets();
-        Pet pet = petRepository.findById(petId).get();
-        favourites.add(pet);
-        user.setFavouritePets(favourites);
-        userRepository.save(user);
-        petRepository.save(pet);
+        Optional<Pet> pet = petRepository.findById(petId);
+        if (pet.isPresent()) {
+            favourites.add(pet.get());
+            user.setFavouritePets(favourites);
+            userRepository.save(user);
+            petRepository.save(pet.get());
+        }
         return user.getFavouritePets();
     }
 
